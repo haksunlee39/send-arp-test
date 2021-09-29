@@ -123,7 +123,16 @@ int getMACwithIP(char* inputIP, char* myMACaddress, char* myIPaddress, char *dev
 	if (sendArpPacket(device, handle, eth_dmac, eth_smac, isRequest, arp_smac, arp_sip, arp_tmac, arp_tip) == -1)
 		return -1;
 
+	int count = 0;
 	while (true) {
+		count += 1;
+		if (count >= 100)
+		{
+			if (sendArpPacket(device, handle, eth_dmac, eth_smac, isRequest, arp_smac, arp_sip, arp_tmac, arp_tip) == -1)
+				return -1;
+				
+			count = 0;
+		}
 		struct pcap_pkthdr* header;
 		struct libnet_ethernet_hdr* ethernetVar;
 		struct arp_ether_ipv4* arpVar;
